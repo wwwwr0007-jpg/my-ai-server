@@ -1,19 +1,25 @@
-name: Free Server
+name: Desktop Server
 
 on:
   workflow_dispatch:
 
 jobs:
-  server:
+  desktop:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Check server
+      - name: Install desktop
         run: |
-          echo "Сервер запущен"
-          uname -a
-          lscpu
-          free -h
+          sudo apt update
+          sudo apt install -y xfce4 xfce4-goodies tigervnc-standalone-server
+
+      - name: Start desktop
+        run: |
+          mkdir -p ~/.vnc
+          echo "password" | vncpasswd -f > ~/.vnc/passwd
+          chmod 600 ~/.vnc/passwd
+
+          vncserver :1 -geometry 1280x720
 
       - name: Keep alive
         run: |
